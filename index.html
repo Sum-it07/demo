@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frontend & Backend</title>
+    <style>
+        body { font-family: sans-serif; margin: 40px; }
+        ul { list-style-type: none; padding: 0; }
+        li { background: #f4f4f4; margin: 5px 0; padding: 10px; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <h1>User List from Backend</h1>
+    <p>This data is fetched from the Python Flask backend.</p>
+    <ul id="user-list">
+        </ul>
+
+    <script>
+        // Use JavaScript to fetch data from the backend
+        async function fetchUsers() {
+            try {
+                // The fetch() function sends a GET request to our backend API endpoint
+                const response = await fetch('http://127.0.0.1:5000/');
+                
+                // Check if the request was successful
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                // Parse the JSON response into a JavaScript object
+                const users = await response.json();
+
+                // Get the unordered list element from the HTML
+                const userList = document.getElementById('user-list');
+
+                // Loop through the users array and create an HTML list item for each
+                users.forEach(user => {
+                    const listItem = document.createElement('li');
+                    listItem.textContent = `ID: ${user.id}, Name: ${user.name}, Email: ${user.email}`;
+                    userList.appendChild(listItem);
+                });
+
+            } catch (error) {
+                console.error('There was a problem with the fetch operation:', error);
+                document.getElementById('user-list').innerHTML = '<li>Error fetching data. Check if the backend server is running.</li>';
+            }
+        }
+
+        // Call the function to fetch and display users when the page loads
+        fetchUsers();
+    </script>
+</body>
+</html>
